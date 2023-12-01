@@ -3,6 +3,7 @@ async function request(url, melthod, body) {
     var response = undefined; 
 
     try {
+        // Realiza request com retorno JSON
         response = await fetch(url, {
             method: melthod,
             headers: {

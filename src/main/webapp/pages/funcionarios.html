@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Empresa Ω - Funcionários</title>
+    <style>
+        table, table td {
+            text-align: center;
+            border: 2px solid black;
+        }
+
+        table thead td {
+            padding: 0 20px;
+        }
+
+        table tbody td {
+            padding: 5px;
+        }
+
+        #cadastro-btt {
+            margin: 20px 0;
+        }
+
+        .icon {
+            width: 25px;
+        }
+    </style>
+</head>
+<body>
+    <div id="cadastro-btt">
+        <a href="form/cadastro-funcionario.html" ><b>+</b> Novo Cadastro</a>
+    </div>
+    <table>
+        <thead>
+            <td>Nome</td>
+            <td>Idade</td>
+            <td>Telefone</td>
+            <td>Email</td>
+            <td>Empresa</td>
+            <td>Cargo</td>
+            <td>Salário</td>
+            <td>Editar</td>
+            <td>Deletar</td>
+        </thead>
+        <tbody id="table-body">
+            <td>Nenhum Registro</td>
+            <td>Nenhum Registro</td>
+            <td>Nenhum Registro</td>
+            <td>Nenhum Registro</td>
+            <td>Nenhum Registro</td>
+            <td>Nenhum Registro</td>
+            <td>Nenhum Registro</td>
+            <td><a href="form/"><img src="../resources/icons/edit-icon.png" alt="editar" class="icon"></a></td>
+            <td><img onclick="deletarRegistro(0)" src="../resources/icons/delete-icon.png" alt="deletar" class="icon"></td>
+        </tbody>
+    </table>
+
+    <script type="text/javascript" src="../resources/js/funcionarios.js"></script>
+    <script type="text/javascript" src="../resources/js/request.js"></script>
+</body>
+</html>

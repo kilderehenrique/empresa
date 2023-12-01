@@ -42,19 +42,17 @@ public class LojaController {
 
     @GetMapping("/{id}/funcionarios")
     public ResponseEntity<LojaDTO> findWithFuncionarios(@PathVariable Long id) {
+        // Consulta loja e funcionarios por loja_id
         Loja loja = lojaRepository.findById(id).get();
         List<Funcionario> funcionarios = funcionarioRepository.findAllByLoja(id);
         
-        LojaDTO lojaDTO = new LojaDTO();
-
         List<FuncionarioDTO> funcionarioDTOs = new ArrayList<FuncionarioDTO>();
-
+        
+        // Converte funcionarios e funcionarioDTOs para saida em JSON
         for(Funcionario funcionario : funcionarios)
             funcionarioDTOs.add(new FuncionarioDTO(funcionario));
-
-        lojaDTO.setLoja(loja);
-        lojaDTO.setFuncionarios(funcionarioDTOs);
         
+        LojaDTO lojaDTO = new LojaDTO(loja, funcionarioDTOs);
         return ResponseEntity.ok().body(lojaDTO);
     }
 
@@ -62,6 +60,7 @@ public class LojaController {
     public ResponseEntity<MessageDTO> save(@RequestBody Loja loja) {
         String resp = "Nova loja criado!";
         
+        // Se existir troca meensagem de saida
         if(loja.getId() != null && lojaRepository.existsById(loja.getId()))
             resp = "Dados da loja atualizados!";
         
@@ -73,9 +72,11 @@ public class LojaController {
     public ResponseEntity<MessageDTO> delete(@PathVariable Long id) {
         String resp = "Loja deletada!";
 
+        // Deleta se existir
         if(lojaRepository.existsById(id))
             lojaRepository.deleteById(id);
         else        
+        // Se não troca mensagem
             resp = "Loja não cadastrada!";
 
         return ResponseEntity.ok().body(new MessageDTO(resp));

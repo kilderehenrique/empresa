@@ -37,6 +37,7 @@ public class FuncionarioController {
     public ResponseEntity<MessageDTO> save(@RequestBody(required = true) Funcionario funcionario) {
         String resp = "Novo funcionário criado!";
         
+        // Se existir troca mensagem de saida
         if(funcionario.getId() != null && funcionarioRepository.existsById(funcionario.getId()))
             resp = "Dados do funcionário atualizados!";
         
@@ -49,9 +50,11 @@ public class FuncionarioController {
     public ResponseEntity<MessageDTO> delete(@PathVariable Long id) {
         String resp = "Funcionário deletado!";
         
+        // Deleta se existir
         if(funcionarioRepository.existsById(id))
-            funcionarioRepository.deleteById(id);
+        funcionarioRepository.deleteById(id);
         else        
+        // Se não troca mensagem de saida
             resp = "Funcionário não cadastrado!";
 
         return ResponseEntity.ok().body(new MessageDTO(resp));

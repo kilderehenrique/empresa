@@ -1,16 +1,21 @@
+async function request(url, melthod, body) {
+    var result = undefined;
+    var response = undefined; 
 
-async function request(url, method, body) {
-    var response = undefined;
+    try {
+        response = await fetch(url, {
+            method: melthod,
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(body),
+        });
 
-    await fetch(url, 
-        {
-            method: method,
-            body: JSON.stringify(body)
-        }
-    ).then(resp => {
-        resp = response;
-    }).catch(erro => alert(erro));
+        result = await response.json();
+        console.log("Success:", result);
+    } catch (error) {
+        console.error("Error:", error);
+    }
 
-
-    return response;
+    return result;
 }

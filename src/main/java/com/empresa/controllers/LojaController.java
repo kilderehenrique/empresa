@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.empresa.DTO.MessageDTO;
 import com.empresa.DTO.FuncionarioDTO;
 import com.empresa.DTO.LojaDTO;
 import com.empresa.models.Funcionario;
@@ -58,18 +59,18 @@ public class LojaController {
     }
 
     @PostMapping("/")
-    public ResponseEntity<String> save(@RequestBody Loja loja) {
+    public ResponseEntity<MessageDTO> save(@RequestBody Loja loja) {
         String resp = "Nova loja criado!";
         
         if(loja.getId() != null && lojaRepository.existsById(loja.getId()))
             resp = "Dados da loja atualizados!";
         
         lojaRepository.save(loja);
-        return ResponseEntity.ok().body(resp);
+        return ResponseEntity.ok().body(new MessageDTO(resp));
     }
     
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> delete(@PathVariable Long id) {
+    public ResponseEntity<MessageDTO> delete(@PathVariable Long id) {
         String resp = "Loja deletada!";
 
         if(lojaRepository.existsById(id))
@@ -77,6 +78,6 @@ public class LojaController {
         else        
             resp = "Loja não cadastrada!";
 
-        return ResponseEntity.ok().body(resp);
+        return ResponseEntity.ok().body(new MessageDTO(resp));
     }
 }

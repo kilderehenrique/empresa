@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.empresa.DTO.MessageDTO;
 import com.empresa.models.Funcionario;
 import com.empresa.repository.FuncionarioRepository;
 
@@ -33,7 +34,7 @@ public class FuncionarioController {
     }
 
     @PostMapping("/")
-    public ResponseEntity<String> save(@RequestBody(required = true) Funcionario funcionario) {
+    public ResponseEntity<MessageDTO> save(@RequestBody(required = true) Funcionario funcionario) {
         String resp = "Novo funcionário criado!";
         
         if(funcionario.getId() != null && funcionarioRepository.existsById(funcionario.getId()))
@@ -41,11 +42,11 @@ public class FuncionarioController {
         
         funcionarioRepository.save(funcionario);
 
-        return ResponseEntity.ok().body(resp);
+        return ResponseEntity.ok().body(new MessageDTO(resp));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> delete(@PathVariable Long id) {
+    public ResponseEntity<MessageDTO> delete(@PathVariable Long id) {
         String resp = "Funcionário deletado!";
         
         if(funcionarioRepository.existsById(id))
@@ -53,7 +54,7 @@ public class FuncionarioController {
         else        
             resp = "Funcionário não cadastrado!";
 
-        return ResponseEntity.ok().body(resp);
+        return ResponseEntity.ok().body(new MessageDTO(resp));
     }
 
 }

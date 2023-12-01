@@ -13,7 +13,6 @@ import jakarta.persistence.Table;
 public class Loja {
 
     @Id
-    @JsonIgnore
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 

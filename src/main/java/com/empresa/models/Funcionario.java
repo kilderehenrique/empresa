@@ -16,7 +16,6 @@ import jakarta.persistence.Table;
 public class Funcionario {
 
     @Id
-    @JsonIgnore
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 

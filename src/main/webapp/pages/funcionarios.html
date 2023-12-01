@@ -1,62 +1,159 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Empresa Ω - Funcionários</title>
+    <script src="../resources/js/request.js"></script>
     <style>
-        table, table td {
-            text-align: center;
-            border: 2px solid black;
-        }
+      table,
+      table td {
+        text-align: center;
+        border: 2px solid black;
+      }
 
-        table thead td {
-            padding: 0 20px;
-        }
+      table thead td {
+        padding: 0 20px;
+      }
 
-        table tbody td {
-            padding: 5px;
-        }
+      table tbody td {
+        padding: 5px;
+      }
 
-        #cadastro-btt {
-            margin: 20px 0;
-        }
+      #cadastro-btt {
+        margin: 20px 0;
+      }
 
-        .icon {
-            width: 25px;
-        }
+      .icon {
+        width: 25px;
+      }
+
+      .hover_pointer:hover {
+        cursor: pointer;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div id="cadastro-btt">
-        <a href="form/cadastro-funcionario.html" ><b>+</b> Novo Cadastro</a>
+      <a href="form/cadastro-funcionario.html"><b>+</b> Novo Cadastro</a>
     </div>
     <table>
-        <thead>
-            <td>Nome</td>
-            <td>Idade</td>
-            <td>Telefone</td>
-            <td>Email</td>
-            <td>Empresa</td>
-            <td>Cargo</td>
-            <td>Salário</td>
-            <td>Editar</td>
-            <td>Deletar</td>
-        </thead>
-        <tbody id="table-body">
-            <td>Nenhum Registro</td>
-            <td>Nenhum Registro</td>
-            <td>Nenhum Registro</td>
-            <td>Nenhum Registro</td>
-            <td>Nenhum Registro</td>
-            <td>Nenhum Registro</td>
-            <td>Nenhum Registro</td>
-            <td><a href="form/"><img src="../resources/icons/edit-icon.png" alt="editar" class="icon"></a></td>
-            <td><img onclick="deletarRegistro(0)" src="../resources/icons/delete-icon.png" alt="deletar" class="icon"></td>
-        </tbody>
+      <thead>
+        <td>Nome</td>
+        <td>Idade</td>
+        <td>Telefone</td>
+        <td>Email</td>
+        <td>Loja</td>
+        <td>Cargo</td>
+        <td>Salário</td>
+        <td>Editar</td>
+        <td>Deletar</td>
+      </thead>
+      <tbody id="table-body">
+        <tr>
+          <td>Nenhum Registro</td>
+          <td>Nenhum Registro</td>
+          <td>Nenhum Registro</td>
+          <td>Nenhum Registro</td>
+          <td>Nenhum Registro</td>
+          <td>Nenhum Registro</td>
+          <td>Nenhum Registro</td>
+          <td>
+            <a
+              ><img
+                src="../resources/icons/edit-icon.png"
+                alt="editar"
+                class="icon"
+            /></a>
+          </td>
+          <td>
+            <img
+              src="../resources/icons/delete-icon.png"
+              alt="deletar"
+              class="icon"
+            />
+          </td>
+        </tr>
+      </tbody>
     </table>
 
-    <script type="text/javascript" src="../resources/js/funcionarios.js"></script>
-    <script type="text/javascript" src="../resources/js/request.js"></script>
-</body>
+    <script>
+      const tbody = document.getElementById("table-body");
+      const trModel =
+        "<tr>" +
+        "<td>$nome</td>" +
+        "<td>$idade</td>" +
+        "<td>$telefone</td>" +
+        "<td>$email</td>" +
+        "<td>$loja</td>" +
+        "<td>$cargo</td>" +
+        "<td>$salario</td>" +
+        '<td><a href="form/?id=$id"><img src="../resources/icons/edit-icon.png" alt="editar" class="icon"></a></td>' +
+        '<td><img onclick="deletar($id)" src="../resources/icons/delete-icon.png" alt="deletar" class="icon hover_pointer"></td>' +
+        "</tr>";
+
+      async function deletar(id) {
+        var resp = undefined;
+
+        try {
+          resp = await request(
+            "http://localhost:8080/funcionarios/" + id,
+            "DELETE"
+          );
+        } catch (error) {
+          alert("Funcionário não deletado!");
+          return;
+        }
+
+        alert(resp.message);
+        location.reload();
+      }
+
+      async function list() {
+        var resp = undefined;
+
+        try {
+          resp = await request("http://localhost:8080/funcionarios/", "GET");
+        } catch (error) {
+          return;
+        }
+
+        var new_tbody = "";
+
+        resp.forEach((funcionario) => {
+          var newTr = trModel.replaceAll("$nome", funcionario.nome);
+          newTr = newTr.replaceAll("$idade", funcionario.idade);
+          newTr = newTr.replaceAll("$id", funcionario.id);
+          newTr = newTr.replaceAll("$telefone", funcionario.telefone);
+          newTr = newTr.replaceAll("$email", funcionario.email);
+          newTr = newTr.replaceAll(
+            "$loja",
+            funcionario.loja != null && funcionario.loja.cnpj
+              ? funcionario.loja.cnpj
+              : "Não registrado"
+          );
+          newTr = newTr.replaceAll(
+            "$cargo",
+            funcionario.cargo != null && funcionario.cargo.nome
+              ? funcionario.cargo.nome
+              : "Não registrado"
+          );
+          newTr = newTr.replaceAll(
+            "$salario",
+            funcionario.cargo != null && funcionario.cargo.salario
+              ? funcionario.cargo.salario
+              : "Não registrado"
+          );
+
+          new_tbody += newTr;
+        });
+
+        if (new_tbody != null && new_tbody.length != 0) {
+          tbody.innerHTML = new_tbody.trim();
+        }
+      }
+
+      list();
+    </script>
+  </body>
 </html>
